@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  zatca-app:
+    build: .
+    container_name: zatca-app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mariadb
+      - redis
+    networks:
+      - zatca_network
+
+  mariadb:
+    image: mariadb:10.6
+    container_name: zatca-mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: zatca_db
+      MYSQL_USER: zatca
+      MYSQL_PASSWORD: zatca_pass
+    networks:
+      - zatca_network
+
+  redis:
+    image: redis:alpine
+    container_name: zatca-redis
+    restart: always
+    networks:
+      - zatca_network
+
+networks:
+  zatca_network:
+    driver: bridge
